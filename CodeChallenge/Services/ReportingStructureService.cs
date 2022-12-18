@@ -36,6 +36,7 @@ public class ReportingStructureService : IReportingStructureService
     private int GetNumOfReports(Employee employee)      // recursive helper method
     {
         var directReports = employee.DirectReports;
+        if (directReports == null) return 0;
         var numOfReports = directReports.Count;
         foreach (var directReport in directReports)
         {
