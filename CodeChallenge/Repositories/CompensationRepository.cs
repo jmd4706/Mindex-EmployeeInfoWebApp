@@ -29,7 +29,9 @@ namespace CodeChallenge.Repositories
         
         public Compensation GetByEmployeeId(string employeeId)
         {
-            return _compensationContext.Compensations.SingleOrDefault(e => e.Employee.EmployeeId == employeeId);
+            var compensation = _compensationContext.Compensations.SingleOrDefault(e => e.Employee.EmployeeId == employeeId);
+            if(compensation != null) _compensationContext.Entry(compensation).Reference(e => e.Employee).Load();
+            return compensation;
         }
 
         public Task SaveAsync()
