@@ -30,6 +30,4 @@ namespace CodeChallenge.Controllers
             return Ok(reportingStructure);
         }
     }
-    
-
 }

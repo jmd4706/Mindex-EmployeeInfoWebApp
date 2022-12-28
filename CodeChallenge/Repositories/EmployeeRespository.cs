@@ -30,7 +30,19 @@ namespace CodeChallenge.Repositories
         public Employee GetById(string id)
         {
             var employee = _employeeContext.Employees.SingleOrDefault(e => e.EmployeeId == id);
-            if(employee != null) _employeeContext.Entry(employee).Collection(e => e.DirectReports).Load();
+            if (employee != null)
+            {
+                _employeeContext.Entry(employee).Collection(e => e.DirectReports).Load();
+                var dirReports = new List<Employee>();
+
+                foreach (var e in employee.DirectReports)
+                {
+                    dirReports.Add(GetById(e.EmployeeId));      // recursively builds the directReports map for this employee
+                }
+                if (dirReports.Count == 0) dirReports = null;
+
+                employee.DirectReports = dirReports;
+            }
             return employee;
         }
 

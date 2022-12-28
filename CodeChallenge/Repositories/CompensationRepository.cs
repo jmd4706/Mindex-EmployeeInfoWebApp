@@ -9,13 +9,13 @@ namespace CodeChallenge.Repositories
 {
     public class CompensationRepository : ICompensationRepository
     {
-        private readonly EmployeeContext _employeeContext;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly CompensationContext _compensationContext;
         private readonly ILogger<ICompensationRepository> _logger;
 
-        public CompensationRepository(ILogger<ICompensationRepository> logger, EmployeeContext employeeContext, CompensationContext compensationContext)
+        public CompensationRepository(ILogger<ICompensationRepository> logger, IEmployeeRepository employeeRepository, CompensationContext compensationContext)
         {
-            _employeeContext = employeeContext;
+            _employeeRepository = employeeRepository;
             _compensationContext = compensationContext;
             _logger = logger;
         }
@@ -30,7 +30,7 @@ namespace CodeChallenge.Repositories
         public Compensation GetByEmployeeId(string employeeId)
         {
             var compensation = _compensationContext.Compensations.SingleOrDefault(e => e.Employee.EmployeeId == employeeId);
-            if(compensation != null) _compensationContext.Entry(compensation).Reference(e => e.Employee).Load();
+            if (compensation != null) compensation.Employee = _employeeRepository.GetById(employeeId);
             return compensation;
         }
 
